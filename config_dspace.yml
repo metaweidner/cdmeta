@@ -1,0 +1,434 @@
+meta_map:
+  - label: Title
+    namespace: dspace
+    element: title
+    qualifier:
+    item_level: "yes"
+  - label: Alternative Title
+    namespace: dspace
+    element: title
+    qualifier: alternative
+    item_level: 
+  - label: Creator (LCNAF)
+    namespace: dspace
+    element: creator
+    qualifier:
+    item_level:
+  - label: Creator (HOT)
+    namespace: dspace
+    element: creator
+    qualifier:
+    item_level:
+  - label: Creator (ULAN)
+    namespace: dspace
+    element: creator
+    qualifier:
+    item_level:
+  - label: Creator (Local)
+    namespace: dspace
+    element: creator
+    qualifier:
+    item_level:
+  - label: Contributor (LCNAF)
+    namespace: dspace
+    element: contributor
+    qualifier:
+    item_level:
+  - label: Contributor (HOT)
+    namespace: dspace
+    element: contributor
+    qualifier:
+    item_level:
+  - label: Contributor (ULAN)
+    namespace: dspace
+    element: contributor
+    qualifier:
+    item_level:
+  - label: Contributor (Local)
+    namespace: dspace
+    element: contributor
+    qualifier:
+    item_level:
+  - label: Contributors (Local)
+    namespace: dspace
+    element: contributor
+    qualifier:
+    item_level:
+  - label: Publisher
+    namespace: dspace
+    element: publisher
+    qualifier:
+    item_level:
+  - label: Place of Creation (TGN)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Place of Creation (HOT)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Place of Creation (Local)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Date (ISO 8601)
+    namespace: dspace
+    element: date
+    qualifier: issued
+    item_level:
+  - label: Date
+    namespace: dspace
+    element: date
+    qualifier:
+    item_level:
+  - label: Description
+    namespace: dspace
+    element: description
+    qualifier: abstract
+    item_level: "yes"
+  - label: Caption
+    namespace: dspace
+    element: description
+    qualifier:
+    item_level: "yes"
+  - label: Inscription
+    namespace: dspace
+    element: description
+    qualifier:
+    item_level: "yes"
+  - label: Donor
+    namespace: dspace
+    element: description
+    qualifier: provenance
+    item_level:
+  - label: Subject.Topical (LCSH)
+    namespace: dspace
+    element: subject
+    qualifier: lcsh
+    item_level:
+  - label: Subject.Topical (TGM-1)
+    namespace: dspace
+    element: subject
+    qualifier: tgm
+    item_level:
+  - label: Subject.Topical (AAT)
+    namespace: dspace
+    element: subject
+    qualifier: aat
+    item_level:
+  - label: Subject.Topical (SAA)
+    namespace: dspace
+    element: subject
+    qualifier: saa
+    item_level:
+  - label: Subject.Topical (Local)
+    namespace: dspace
+    element: subject
+    qualifier: topic
+    item_level:
+  - label: Subject.Name (LCNAF)
+    namespace: dspace
+    element: subject
+    qualifier: lcsh
+    item_level:
+  - label: Subject.Name (HOT)
+    namespace: dspace
+    element: subject
+    qualifier: hot
+    item_level:
+  - label: Subject.Name (ULAN)
+    namespace: dspace
+    element: subject
+    qualifier: ulan
+    item_level:
+  - label: Subject.Name (Local)
+    namespace: dspace
+    element: subject
+    qualifier: other
+    item_level:
+  - label: Subject.Time Period (LCSH)
+    namespace: dspace
+    element: coverage
+    qualifier: temporal
+    item_level:
+  - label: Subject.Time Period (HOT)
+    namespace: dspace
+    element: coverage
+    qualifier: temporal
+    item_level:
+  - label: Subject.Time Period (Local)
+    namespace: dspace
+    element: coverage
+    qualifier: temporal
+    item_level:
+  - label: Subject.Geographic (TGN)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Subject. Geographic (TGN)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Subject.Geographic (HOT)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Subject.Geographic (Local)
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Geographic Coordinates
+    namespace: dspace
+    element: coverage
+    qualifier: spatial
+    item_level:
+  - label: Genre (AAT)
+    namespace: dspace
+    element: format
+    qualifier: medium
+    item_level:
+  - label: Genre (PBCore)
+    namespace: dspace
+    element: format
+    qualifier: medium
+    item_level:
+  - label: Genre (Local)
+    namespace: dspace
+    element: format
+    qualifier: medium
+    item_level:
+  - label: Language
+    namespace: dspace
+    element: language
+    qualifier:
+    item_level:
+  - label: Language Code (ISO 639.2)
+    namespace: dspace
+    element: language
+    qualifier: iso
+    item_level:
+  - label: Physical Description
+    namespace: dspace
+    element: format
+    qualifier: extent
+    item_level:
+  - label: Type (DCMI)
+    namespace: dspace
+    element: type
+    qualifier:
+    item_level:
+  - label: Format (IMT)
+    namespace: dspace
+    element: format
+    qualifier: mimetype
+    item_level:
+  - label: Original Item Extent
+    namespace: dspace
+    element: format
+    qualifier: extent
+    item_level:
+  - label: Original Item Location
+    namespace: dspace
+    element: identifier
+    qualifier:
+    item_level:
+  - label: Original Item URL
+    namespace: dspace
+    element: identifier
+    qualifier: uri
+    item_level:
+  - label: Original Collection
+    namespace: dspace
+    element: relation
+    qualifier: ispartof
+    item_level:
+  - label: Original Collection URL
+    namespace: dspace
+    element: relation
+    qualifier: uri
+    item_level:
+  - label: Digital Collection
+    namespace: dspace
+    element: relation
+    qualifier: ispartof
+    item_level:
+  - label: Digital Collection URL
+    namespace: dspace
+    element: relation
+    qualifier: uri
+    item_level:
+  - label: Repository
+    namespace: dspace
+    element: relation
+    qualifier: ispartof
+    item_level:
+  - label: Repository URL
+    namespace: dspace
+    element: relation
+    qualifier: uri
+    item_level:
+  - label: Use and Reproduction
+    namespace: dspace
+    element: rights
+    qualifier:
+    item_level:
+  - label: File name
+    namespace: uhl
+    element: fileName
+    qualifier:
+    item_level:
+  - label: Identifier
+    namespace: dspace
+    element: identifier
+    qualifier:
+    item_level:
+  - label: Access File Run Time
+    namespace: dspace
+    element: format
+    qualifier: extent
+    item_level:
+  - label: Access File Compression Rate
+    namespace: uhl
+    element: accessFileCompressionRate
+    qualifier:
+    item_level:
+  - label: Access File Resolution
+    namespace: uhl
+    element: accessFileResolution
+    qualifier:
+    item_level:
+  - label: Access File Checksum
+    namespace: uhl
+    element: accessFileChecksum
+    qualifier:
+    item_level:
+  - label: Access File Notes
+    namespace: uhl
+    element: accessFileNotes
+    qualifier:
+    item_level:
+  - label: Capture Tool
+    namespace: uhl
+    element: captureTool
+    qualifier:
+    item_level:
+  - label: Digital Creator
+    namespace: uhl
+    element: digitalCreator
+    qualifier:
+    item_level:
+  - label: Preservation File Name
+    namespace: uhl
+    element: preservationFileName
+    qualifier:
+    item_level:
+  - label: Preservation File name
+    namespace: uhl
+    element: preservationFileName
+    qualifier:
+    item_level:
+  - label: Preservation File Date Digital (ISO 8601)
+    namespace: uhl
+    element: preservationFileDateDigital
+    qualifier:
+    item_level:
+  - label: Preservation File Bit Depth
+    namespace: uhl
+    element: preservationFileBitDepth
+    qualifier:
+    item_level:
+  - label: Preservation File Bit Rate
+    namespace: uhl
+    element: preservationFileBitRate
+    qualifier:
+    item_level:
+  - label: Preservation File Resolution
+    namespace: uhl
+    element: preservationFileResolution
+    qualifier:
+    item_level:
+  - label: Preservation File Extent
+    namespace: uhl
+    element: preservationFileExtent
+    qualifier:
+    item_level:
+  - label: Preservation File Checksum (MD5)
+    namespace: uhl
+    element: preservationFileChecksum
+    qualifier: MD5
+    item_level:
+  - label: Preservation File Checksum (SHA-1)
+    namespace: uhl
+    element: preservationFileChecksum
+    qualifier: SHA-1
+    item_level:
+  - label: Preservation File Notes
+    namespace: uhl
+    element: preservationFileNotes
+    qualifier:
+    item_level:
+  - label: Transcript
+    namespace: uhl
+    element: transcript
+    qualifier:
+    item_level:
+  - label: Page Sequence Number
+    namespace: uhl
+    element: pageSequenceNumber
+    qualifier:
+    item_level:
+  - label: Conference
+    namespace: uhl
+    element: conference
+    qualifier:
+    item_level:
+  - label: Archival file
+    namespace: uhl
+    element: archivalFile
+    qualifier:
+    item_level:
+  - label: OCLC number
+    namespace: dspace
+    element: identifier
+    qualifier: other
+    item_level:
+  - label: Date created
+    namespace: cdm
+    element: dateCreated
+    qualifier:
+    item_level:
+  - label: Date modified
+    namespace: cdm
+    element: dateModified
+    qualifier:
+    item_level:
+  - label: CONTENTdm number
+    namespace: cdm
+    element: number
+    qualifier:
+    item_level:
+  - label: CONTENTdm file name
+    namespace: cdm
+    element: fileName
+    qualifier:
+    item_level:
+  - label: Attribution
+    namespace: uhl
+    element: attribution
+    qualifier:
+    item_level:
+
+dc_map_template:
+  - label: 
+    namespace:
+    element: 
+    qualifier:
+    item_level:
+

@@ -199,7 +199,7 @@ def transform_item_dspace(item_info, collection_map)
 
 					value.split("; ").each do |v|
 						field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
-						field += "#{v}</dcvalue>"
+						field += "#{v.strip}</dcvalue>"
 						new_item << field
 					end
 
@@ -226,6 +226,21 @@ end
 
 def get_compound_object_items(compound_object_info)
 	compound_object_items = compound_object_info.xpath("//pageptr/text()")
+end
+
+
+def construct_new_file_name(item_info, page_num)
+	cdm_file_name = item_info.fetch("find").split(".")
+	original_file_name = item_info.fetch("file").split(".")
+	new_file_name = "#{original_file_name[0]}_cdm_%03d.#{cdm_file_name[1]}" % page_num
+end
+
+def download_file_dspace(object_download_dir, new_file_name, cdm_file_url, collection_alias, pointer)
+	File.open("#{object_download_dir}/#{new_file_name}", "wb") do |saved_file|
+		open("#{cdm_file_url}/#{collection_alias}/#{pointer}", "rb") do |read_file|
+			saved_file.write(read_file.read)
+		end
+	end
 end
 
 

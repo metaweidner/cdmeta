@@ -79,7 +79,8 @@ collection_aliases.each do |collection_alias|
 
 		# create object directory and prepare metadata variables
 		object_count += 1
-		object_download_dir = "#{download_dir}/item_%04d" % object_count
+		object_download_dir = File.join(download_dir, "item_%04d") % object_count
+		# object_download_dir = "#{download_dir}/item_%04d" % object_count
 		FileUtils::mkdir_p object_download_dir
 		content_file = ""
 		metadata_file = "<dublin_core>\n"
@@ -119,7 +120,7 @@ collection_aliases.each do |collection_alias|
 				new_item_info.each do |line|
 					if line.include? "element=\"description"
 						original_description = line.split(">")
-						new_description = "#{original_description[0]}>(File #{new_file_name}) #{original_description[1]}>"
+						new_description = "#{original_description[0]}>(#{new_file_name}) #{original_description[1]}>"
 						metadata_file += "\t#{new_description}\n"
 					else
 						next
@@ -127,7 +128,7 @@ collection_aliases.each do |collection_alias|
 				end
 
 				# store the item title in the table of contents
-				table_of_contents += "File #{new_file_name}: " + item_info.fetch("title") + "\n" unless item_info.fetch("title").nil?
+				table_of_contents += "#{new_file_name}: " + item_info.fetch("title") + "\n" unless item_info.fetch("title").nil?
 
 				# download file from contentdm
 				puts "... downloading file \'#{new_file_name}\' "

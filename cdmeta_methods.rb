@@ -142,7 +142,7 @@ def transform_item_fedora(item_info, collection_map)
 				vocab = field_info['vocab']
 
 				# remove white space and trailing semicolon
-				value = value.strip.chomp(";")
+				value = value.strip.chomp(";").gsub('&', '&amp;')
 
 				# parse multi-value fields and exclude transcript
 				if (value.include? ";") && (map != "transcript") && (label != "Description") && (type != ("inscription"||"caption"))
@@ -150,19 +150,19 @@ def transform_item_fedora(item_info, collection_map)
 					values = value.split(";")
 					values.each do |v|
 						field = "<#{namespace}:#{map}"
-	#					field = "<#{namespace}:#{map} label=\"#{label}\""
-	#					field += " type=\"#{type}\"" unless type.nil?
-	#					field += " vocab=\"#{vocab}\"" unless vocab.nil?
+						# field = "<#{namespace}:#{map} label=\"#{label}\""
+						# field += " type=\"#{type}\"" unless type.nil?
+						# field += " vocab=\"#{vocab}\"" unless vocab.nil?
 						field += ">#{v.strip}</#{namespace}:#{map}>"
 						new_item << field
 					end
 
 				else # single value fields
 					field = "<#{namespace}:#{map}"
-	#				field = "<#{namespace}:#{map} label=\"#{label}\""
-	#				field += " type=\"#{type}\"" unless type.nil?
-	#				field += " vocab=\"#{vocab}\"" unless vocab.nil?
-					field += ">#{value.strip}</#{namespace}:#{map}>"
+					# field = "<#{namespace}:#{map} label=\"#{label}\""
+					# field += " type=\"#{type}\"" unless type.nil?
+					# field += " vocab=\"#{vocab}\"" unless vocab.nil?
+					field += ">#{value}</#{namespace}:#{map}>"
 					new_item << field
 				end
 			end
@@ -235,9 +235,9 @@ def construct_new_file_name(item_info, page_num)
 	new_file_name = "#{original_file_name[0]}_cdm_%03d.#{cdm_file_name[1]}" % page_num
 end
 
-def download_file_dspace(object_download_dir, new_file_name, cdm_file_url, collection_alias, pointer)
+def download_file_dspace(object_download_dir, new_file_name, cdm_get_file_url, collection_alias, pointer)
 	File.open("#{object_download_dir}/#{new_file_name}", "wb") do |saved_file|
-		open("#{cdm_file_url}/#{collection_alias}/#{pointer}", "rb") do |read_file|
+		open("#{cdm_get_file_url}/#{collection_alias}/#{pointer}", "rb") do |read_file|
 			saved_file.write(read_file.read)
 		end
 	end

@@ -37,7 +37,7 @@ download_start = Time.now
 # collection_aliases = get_collection_aliases(collections)
 
 ### use array for limited number of collections
-collection_aliases = ["p15195coll39", "p15195coll11"]
+collection_aliases = ["p15195coll11", "p15195coll39"]
 
 ### dams test collections ###
 # p15195coll39 theodor de bry
@@ -68,7 +68,7 @@ collection_aliases.each do |collection_alias|
 	collection_title = collection_titles.fetch(collection_alias)
 	download_dir = "#{admin_config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
 	FileUtils::mkdir_p download_dir
-	puts "\nDownloading Collection: " + "#{download_dir}".red + "\n"
+	puts "\nDownloading Collection:\n" + "#{download_dir}".red + "\n"
 	object_count = 0
 
 	# get all objects in collection and loop through each one
@@ -104,7 +104,7 @@ collection_aliases.each do |collection_alias|
 			compound_object_items.each do |pointer|
 
 				puts "... getting file info #{pointer}"
-				item_start = Time.now
+				# item_start = Time.now
 				page_num += 1
 
 				# get the item metadata
@@ -130,11 +130,12 @@ collection_aliases.each do |collection_alias|
 				table_of_contents += "File #{new_file_name}: " + item_info.fetch("title") + "\n" unless item_info.fetch("title").nil?
 
 				# download file from contentdm
-				print "... downloading file \'#{new_file_name}\' "
+				puts "... downloading file \'#{new_file_name}\' "
+				# print "... downloading file \'#{new_file_name}\' "
 				download_file_dspace(object_download_dir, new_file_name, cdm_get_file_url, collection_alias, pointer)
-				item_finish = Time.now
-				item_time = Time.at(item_finish - item_start).utc.strftime("%M:%S")
-				puts "#{item_time}"
+				# item_finish = Time.now
+				# item_time = Time.at(item_finish - item_start).utc.strftime("%M:%S")
+				# puts "#{item_time}"
 
 			end
 
@@ -179,7 +180,7 @@ collection_aliases.each do |collection_alias|
 	# output collection download info to the console
 	collection_finish = Time.now
 	collection_time = Time.at(collection_finish - collection_start).utc.strftime("%H:%M:%S")
-	puts "\n" + "Collection Download Complete: #{collection_title} (#{object_count} objects in #{collection_time})".green + "\n"
+	puts "\nCollection Download Complete: " + "#{collection_title} (#{object_count} objects in #{collection_time})".green + "\n"
 	collection_count += 1
 	total_object_count += object_count
 
@@ -188,7 +189,10 @@ end
 # output repository download info to the console
 download_finish = Time.now
 download_time = Time.at(download_finish - download_start).utc.strftime("%H:%M:%S")
-puts "\n" + "UHDL Download Complete".green
+
+puts "\n\n----------------------"
+puts "UHDL Download Complete".green
 puts "Total Collections: #{collection_count}"
 puts "Total Objects: #{total_object_count}"
-puts "Total Time: #{download_time}\n\n"
+puts "Total Time: #{download_time}"
+puts "----------------------\n\n"

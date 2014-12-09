@@ -189,26 +189,25 @@ def transform_item_dspace(item_info, collection_map)
 				# label = field_info['label']
 				# vocab = field_info['vocab']
 
-				# remove white space, trailing semicolon, and escape ampersands
-				value = value.strip.chomp(";").gsub('&', '&amp;')
+				# remove white space, trailing semicolon
+				value = value.strip.chomp(";")
 
-				# parse multi-value fields and exclude transcript, description, extent, and relation
+				# parse multi-value fields and exclude transcript, description, extent
 				if (value.include? ";") && (element != "transcript") \
 										&& (element != "description") \
-										&& (qualifier != "extent") \
-										&& (element != "relation")
+										&& (qualifier != "extent")
 
 					value.split(";").each do |v|
 						# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
 						field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\">"
-						field += "#{v.strip}</dcvalue>"
+						field << "#{v.strip.gsub('&', '&amp;')}</dcvalue>" # strip whitespace, escape ampersands
 						new_item << field
 					end
 
 				else # single value fields and exceptions
 					# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
 					field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\">"
-					field += "#{value}</dcvalue>"
+					field << "#{value.gsub('&', '&amp;')}</dcvalue>" # escape ampersands
 					new_item << field
 				end
 

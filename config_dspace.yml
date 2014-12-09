@@ -112,22 +112,22 @@ meta_map:
   - label: Subject.Topical (TGM-1)
     namespace: dspace
     element: subject
-    qualifier: tgm
+    qualifier: other
     item_level:
   - label: Subject.Topical (AAT)
     namespace: dspace
     element: subject
-    qualifier: aat
+    qualifier: other
     item_level:
   - label: Subject.Topical (SAA)
     namespace: dspace
     element: subject
-    qualifier: saa
+    qualifier: other
     item_level:
   - label: Subject.Topical (Local)
     namespace: dspace
     element: subject
-    qualifier: topic
+    qualifier: other
     item_level:
   - label: Subject.Name (LCNAF)
     namespace: dspace
@@ -137,12 +137,12 @@ meta_map:
   - label: Subject.Name (HOT)
     namespace: dspace
     element: subject
-    qualifier: hot
+    qualifier: other
     item_level:
   - label: Subject.Name (ULAN)
     namespace: dspace
     element: subject
-    qualifier: ulan
+    qualifier: other
     item_level:
   - label: Subject.Name (Local)
     namespace: dspace

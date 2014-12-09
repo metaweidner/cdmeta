@@ -2,19 +2,19 @@ require 'open-uri'
 require 'fileutils'
 require 'json'
 require 'nokogiri'
-# require 'om'
 require 'yaml'
 require './cdmeta_methods'
 
-config = YAML::load_file(File.join(__dir__, 'config_fedora.yml'))
+admin_config = YAML::load_file(File.join(__dir__, 'config.yml'))
+fedora_config = YAML::load_file(File.join(__dir__, 'config_fedora.yml'))
 
-server = config['cdm']['server']
-port = config['cdm']['port']
+server = admin_config['cdm']['server']
+port = admin_config['cdm']['port']
 cdm_url = "http://#{server}:#{port}/dmwebservices/index.php?q="
 
-meta_map_config = config['meta_map']
+meta_map_config = fedora_config['meta_map']
 meta_map = meta_map_to_hash(meta_map_config)
-collections_config = config['collections']
+collections_config = admin_config['collections']
 collection_titles = collections_to_hash(collections_config)
 
 puts "\nDownloading Repository Metadata\n"
@@ -44,7 +44,7 @@ collection_aliases.each do |collection_alias|
 
 	# create archive directory for download
 	collection_title = collection_titles.fetch(collection_alias)
-	download_dir = "#{config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
+	download_dir = "#{admin_config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
 	FileUtils::mkdir_p download_dir
 	puts "\nDownloading Collection: #{download_dir}\n"
 	object_count = 0

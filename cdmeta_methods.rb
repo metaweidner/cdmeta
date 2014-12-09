@@ -141,7 +141,7 @@ def transform_item_fedora(item_info, collection_map)
 				type = field_info['type']
 				vocab = field_info['vocab']
 
-				# remove white space and trailing semicolon
+				# remove white space, trailing semicolon, and escape ampersands
 				value = value.strip.chomp(";").gsub('&', '&amp;')
 
 				# parse multi-value fields and exclude transcript
@@ -189,8 +189,8 @@ def transform_item_dspace(item_info, collection_map)
 				# label = field_info['label']
 				# vocab = field_info['vocab']
 
-				# remove white space and trailing semicolon
-				value = value.strip.chomp(";")
+				# remove white space, trailing semicolon, and escape ampersands
+				value = value.strip.chomp(";").gsub('&', '&amp;')
 
 				# parse multi-value fields and exclude transcript, description, and extent
 				if (value.include? ";") && (element != "transcript") \

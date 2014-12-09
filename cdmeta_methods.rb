@@ -238,8 +238,8 @@ def construct_new_file_name(item_info, page_num)
 end
 
 def download_file_dspace(object_download_dir, new_file_name, cdm_get_file_url, collection_alias, pointer)
-	File.open("#{object_download_dir}/#{new_file_name}", "wb") do |saved_file|
-		open("#{cdm_get_file_url}/#{collection_alias}/#{pointer}", "rb") do |read_file|
+	File.open(File.join(object_download_dir, new_file_name), "wb") do |saved_file|
+		open(File.join(cdm_get_file_url, collection_alias, pointer), "rb") do |read_file|
 			saved_file.write(read_file.read)
 		end
 	end

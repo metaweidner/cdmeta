@@ -192,10 +192,11 @@ def transform_item_dspace(item_info, collection_map)
 				# remove white space, trailing semicolon, and escape ampersands
 				value = value.strip.chomp(";").gsub('&', '&amp;')
 
-				# parse multi-value fields and exclude transcript, description, and extent
+				# parse multi-value fields and exclude transcript, description, extent, and relation
 				if (value.include? ";") && (element != "transcript") \
 										&& (element != "description") \
-										&& ((element != "format")&&(qualifier != "extent"))
+										&& (qualifier != "extent") \
+										&& (element != "relation")
 
 					value.split(";").each do |v|
 						# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"

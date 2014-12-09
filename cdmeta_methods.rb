@@ -185,9 +185,9 @@ def transform_item_dspace(item_info, collection_map)
 			if field_info['namespace'] == "dspace"
 
 				element = field_info['element']
-				field_info['qualifier'].nil? ? qualifier = "none" : qualifier = field_info['qualifier']
-				label = field_info['label']
-				vocab = field_info['vocab']
+				field_info['qualifier'] ? qualifier = field_info['qualifier'] : qualifier = "none"
+				# label = field_info['label']
+				# vocab = field_info['vocab']
 
 				# remove white space and trailing semicolon
 				value = value.strip.chomp(";")
@@ -197,14 +197,16 @@ def transform_item_dspace(item_info, collection_map)
 										&& (element != "description") \
 										&& ((element != "format")&&(qualifier != "extent"))
 
-					value.split("; ").each do |v|
-						field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
+					value.split(";").each do |v|
+						# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
+						field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\">"
 						field += "#{v.strip}</dcvalue>"
 						new_item << field
 					end
 
 				else # single value fields and exceptions
-					field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
+					# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"
+					field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\">"
 					field += "#{value}</dcvalue>"
 					new_item << field
 				end

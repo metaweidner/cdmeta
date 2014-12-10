@@ -139,36 +139,65 @@ def transform_item_fedora(item_info, collection_map)
 				map = field_info['map']
 				label = field_info['label']
 				type = field_info['type']
-				vocab = field_info['vocab']
+				value = value.strip.chomp(";") # remove white space, trailing semicolon
 
-				# remove white space, trailing semicolon, and escape ampersands
-				value = value.strip.chomp(";").gsub('&', '&amp;')
-
-				# parse multi-value fields and exclude transcript
-				if (value.include? ";") && (map != "transcript") && (label != "Description") && (type != ("inscription"||"caption"))
+				# parse multi-value fields; exclude: title, transcript, description, inscription, caption
+				if (value.include? ";") && (map != ("title"||"transcript")) \
+										&& (label != "Description") \
+										&& (type != ("inscription"||"caption"))
 
 					values = value.split(";")
-					values.each do |v|
-						field = "<#{namespace}:#{map}"
-						# field = "<#{namespace}:#{map} label=\"#{label}\""
-						# field += " type=\"#{type}\"" unless type.nil?
-						# field += " vocab=\"#{vocab}\"" unless vocab.nil?
-						field += ">#{v.strip}</#{namespace}:#{map}>"
-						new_item << field
-					end
+					values.each {|v| new_item << "<#{namespace}:#{map}>#{v.strip.gsub('&', '&amp;')}</#{namespace}:#{map}>" }
 
 				else # single value fields
-					field = "<#{namespace}:#{map}"
-					# field = "<#{namespace}:#{map} label=\"#{label}\""
-					# field += " type=\"#{type}\"" unless type.nil?
-					# field += " vocab=\"#{vocab}\"" unless vocab.nil?
-					field += ">#{value}</#{namespace}:#{map}>"
-					new_item << field
+
+					new_item << "<#{namespace}:#{map}>#{value.gsub('&', '&amp;')}</#{namespace}:#{map}>"
+
 				end
 			end
 		end
 	end
 	new_item
+end
+
+
+def get_fedora_foxml(name, pid, dc_datastream, collection_alias, compound_object_pid = nil)
+
+	# FOXML header
+	foxml_file = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+	foxml_file << "<foxml:digitalObject xmlns:foxml=\"info:fedora/fedora-system:def/foxml#\" VERSION=\"1.1\" PID=\"#{pid}\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd\">\n"
+	foxml_file << "\t"   + "<foxml:objectProperties>\n"
+	foxml_file << "\t"*2 + "<foxml:property NAME=\"info:fedora/fedora-system:def/model#state\" VALUE=\"A\"/>\n"
+	foxml_file << "\t"*2 + "<foxml:property NAME=\"info:fedora/fedora-system:def/model#label\" VALUE=\"#{name}\"/>\n"
+	foxml_file << "\t"   + "</foxml:objectProperties>\n"
+
+	# DC datastream
+	foxml_file << "\t"   + "<foxml:datastream ID=\"DC\" STATE=\"A\" CONTROL_GROUP=\"X\">\n"
+	foxml_file << "\t"*2 + "<foxml:datastreamVersion FORMAT_URI=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" ID=\"DC.0\" MIMETYPE=\"text/xml\" LABEL=\"Dublin Core Record\">\n"
+	foxml_file << "\t"*3 + "<foxml:xmlContent>\n"
+	foxml_file << dc_datastream
+	foxml_file << "\t"*3 + "</foxml:xmlContent>\n"
+	foxml_file << "\t"*2 + "</foxml:datastreamVersion>\n"
+	foxml_file << "\t"   + "</foxml:datastream>\n"
+
+	# RELS-EXT datastream
+	foxml_file << "\t"   + "<foxml:datastream ID=\"RELS-EXT\" CONTROL_GROUP=\"X\">\n"
+	foxml_file << "\t"*2 + "<foxml:datastreamVersion FORMAT_URI=\"info:fedora/fedora-system:FedoraRELSExt-1.0\" ID=\"RELS-EXT.0\" MIMETYPE=\"application/rdf+xml\" LABEL=\"RDF Statements about this object\">\n"
+	foxml_file << "\t"*3 + "<foxml:xmlContent>\n"
+	foxml_file << "\t"*4 + "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:fedora=\"info:fedora/fedora-system:def/relations-external#\" xmlns:myns=\"http://www.nsdl.org/ontologies/relationships#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\">\n"
+	foxml_file << "\t"*5 + "<rdf:Description rdf:about=\"info:fedora/#{pid}\">\n"
+	foxml_file << "\t"*6 + "<fedora:isMemberOfCollection rdf:resource=\"info:fedora/uhdamstf:#{collection_alias}\"/>\n"
+	if compound_object_pid
+		foxml_file << "\t"*6 + "<myns:isPartOf rdf:resource=\"info:fedora/#{compound_object_pid}\"/>\n"
+	end
+	foxml_file << "\t"*5 + "</rdf:Description>\n"
+	foxml_file << "\t"*4 + "</rdf:RDF>\n"
+	foxml_file << "\t"*3 + "</foxml:xmlContent>\n"
+	foxml_file << "\t"*2 + "</foxml:datastreamVersion>\n"
+	foxml_file << "\t"   + "</foxml:datastream>\n"
+
+	# EOF
+	foxml_file << "</foxml:digitalObject>"
 end
 
 

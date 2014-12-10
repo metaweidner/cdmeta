@@ -21,9 +21,9 @@ meta_map = meta_map_to_hash(meta_map_config)
 
 puts "\n------------------------------------------------"
 puts "Downloading UH Digital Library Metadata & Files:"
-collection_count = 0
-total_object_count = 0
-total_file_count = 0
+total_collections = 0
+total_objects = 0
+total_files = 0
 
 ### EITHER uncomment next two lines for all collections
 # collections = get_collections(cdm_url)
@@ -90,12 +90,12 @@ collection_aliases.each do |collection_alias|
 			puts "Downloading Compound Object: #{record['pointer']}"
 
 			# get the items in the object and loop through each one
-			file_num = 0
+			file_count = 0
 			compound_object_info = get_compound_object_info(cdm_url, collection_alias, record['pointer'])
 			compound_object_items = get_compound_object_items(compound_object_info)
 			compound_object_items.each do |pointer|
 
-				file_num += 1
+				file_count += 1
 				puts "... getting item #{pointer}"
 
 				# get the item metadata
@@ -117,24 +117,24 @@ collection_aliases.each do |collection_alias|
 
 			end
 
-			puts "Compound Object Downloaded: " + "#{record['pointer']} (#{file_num} files)".green + "\n\n"
-			total_file_count += file_num
+			puts "Compound Object Downloaded: " + "#{record['pointer']} (#{file_count} files)".green + "\n\n"
+			total_files += file_count
 
 		else
 			puts "Single Object Downloaded: " + record['pointer'].to_s.green + "\n\n"
-			total_file_count += 1
+			total_files += 1
 		end
 	end
 
 	puts "-----------------------------"
 	puts "Collection Download Complete: " + "#{collection_title} (#{object_count})".green
 	puts "-----------------------------\n"
-	collection_count += 1
-	total_object_count += object_count
+	total_collections += 1
+	total_objects += object_count
 
 end
 
 puts "\nUHDL Download Complete".green
-puts "Total Collections: #{collection_count}"
-puts "Total Objects: #{total_object_count}"
-puts "Total Files: #{total_file_count}\n\n"
+puts "Total Collections: #{total_collections}"
+puts "Total Objects: #{total_objects}"
+puts "Total Files: #{total_files}\n\n"

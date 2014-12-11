@@ -225,7 +225,7 @@ meta_map:
     type:
     vocab: dcmi
   - label: Format (IMT)
-    namespace: dc
+    namespace: uhlibadmin
     map: format
     type:
     vocab: imt
@@ -280,7 +280,7 @@ meta_map:
     type:
     vocab:
   - label: File name
-    namespace: uhl
+    namespace: uhlibadmin
     map: fileName
     type:
     vocab:
@@ -290,87 +290,87 @@ meta_map:
     type:
     vocab:
   - label: Access File Run Time
-    namespace: uhl
+    namespace: uhlibadmin
     map: accessFileRunTime
     type:
     vocab:
   - label: Access File Compression Rate
-    namespace: uhl
+    namespace: uhlibadmin
     map: accessFileCompressionRate
     type:
     vocab:
   - label: Access File Resolution
-    namespace: uhl
+    namespace: uhlibadmin
     map: accessFileResolution
     type:
     vocab:
   - label: Access File Checksum
-    namespace: uhl
+    namespace: uhlibadmin
     map: accessFileChecksum
     type:
     vocab:
   - label: Access File Notes
-    namespace: uhl
+    namespace: uhlibadmin
     map: accessFileNotes
     type:
     vocab:
   - label: Capture Tool
-    namespace: uhl
+    namespace: uhlibadmin
     map: captureTool
     type:
     vocab:
   - label: Digital Creator
-    namespace: uhl
+    namespace: uhlibadmin
     map: digitalCreator
     type:
     vocab:
   - label: Preservation File Name
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileName
     type:
     vocab:
   - label: Preservation File name
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileName
     type:
     vocab:
   - label: Preservation File Date Digital (ISO 8601)
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileDateDigital
     type:
     vocab:
   - label: Preservation File Bit Depth
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileBitDepth
     type:
     vocab:
   - label: Preservation File Bit Rate
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileBitRate
     type:
     vocab:
   - label: Preservation File Resolution
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileResolution
     type:
     vocab:
   - label: Preservation File Extent
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileExtent
     type:
     vocab:
   - label: Preservation File Checksum (MD5)
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileChecksum
     type: MD5
     vocab:
   - label: Preservation File Checksum (SHA-1)
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileChecksum
     type: SHA-1
     vocab:
   - label: Preservation File Notes
-    namespace: uhl
+    namespace: uhlibadmin
     map: preservationFileNotes
     type:
     vocab:

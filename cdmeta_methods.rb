@@ -124,8 +124,8 @@ def transform_item(item_info, collection_map)
 end
 
 
-def transform_item_fedora(item_info, collection_map)
-	new_item = []
+def get_item_dc_fedora(item_info, collection_map)
+	item_dc = []
 	field_info = {}
 	item_info.each do |nick, value|
 		if value.class == Hash # blank fields return an empty hash
@@ -147,17 +147,17 @@ def transform_item_fedora(item_info, collection_map)
 										&& (type != ("inscription"||"caption"))
 
 					values = value.split(";")
-					values.each {|v| new_item << "<#{namespace}:#{map}>#{v.strip.gsub('&', '&amp;')}</#{namespace}:#{map}>" }
+					values.each {|v| item_dc << "<#{namespace}:#{map}>#{v.strip.gsub('&', '&amp;')}</#{namespace}:#{map}>" }
 
 				else # single value fields
 
-					new_item << "<#{namespace}:#{map}>#{value.gsub('&', '&amp;')}</#{namespace}:#{map}>"
+					item_dc << "<#{namespace}:#{map}>#{value.gsub('&', '&amp;')}</#{namespace}:#{map}>"
 
 				end
 			end
 		end
 	end
-	new_item
+	item_dc
 end
 
 
@@ -283,21 +283,22 @@ def export_default_metadata_map(download_dir = "/Users/weidnera/Desktop")
 	require 'json'
 	require 'nokogiri'
 	require 'yaml'
-	config = YAML::load_file(File.join(__dir__, 'config.yml'))
-	server = config['cdm']['server']
-	port = config['cdm']['port']
+	admin_config = YAML::load_file(File.join(__dir__, 'config.yml'))
+	meta_config = YAML::load_file(File.join(__dir__, 'config_fedora.yml'))
+	server = admin_config['cdm']['server']
+	port = admin_config['cdm']['port']
 	cdm_url = "http://#{server}:#{port}/dmwebservices/index.php?q="
-	meta_map_config = config['meta_map']
+	meta_map_config = meta_config['meta_map']
 	meta_map_file = ""
 	meta_map_config.each do |field|
-		field['namespace'].nil? ? namespace = "" : namespace = field['namespace']
-		field['map'].nil? ? map = "" : map = field['map']
-		field['label'].nil? ? label = "" : label = field['label']
-		field['type'].nil? ? type = "" : type = field['type']
-		field['vocab'].nil? ? vocab = "" : vocab = field['vocab']
+		field['namespace'] ? namespace = field['namespace'] : namespace = ""
+		field['map'] ? map = field['map'] : map = ""
+		field['label'] ? label = field['label'] : label = ""
+		field['type'] ? type = field['type'] : type = ""
+		field['vocab'] ? vocab = field['vocab'] : vocab = ""
 		meta_map_file += "#{label}\t#{namespace}\t#{map}\t#{type}\t#{vocab}\n"
 	end
-	File.open("#{download_dir}/default_map.txt", 'w') { |f| f.write(meta_map_file) }
+	File.open("#{download_dir}/default_map.txt", 'w') {|f| f.write(meta_map_file) }
 end
 
 def export_dspace_metadata_map(download_dir = "/Users/weidnera/Desktop")
@@ -306,11 +307,12 @@ def export_dspace_metadata_map(download_dir = "/Users/weidnera/Desktop")
 	require 'json'
 	require 'nokogiri'
 	require 'yaml'
-	config = YAML::load_file(File.join(__dir__, 'config_dspace.yml'))
-	server = config['cdm']['server']
-	port = config['cdm']['port']
+	admin_config = YAML::load_file(File.join(__dir__, 'config.yml'))
+	meta_config = YAML::load_file(File.join(__dir__, 'config_dspace.yml'))
+	server = admin_config['cdm']['server']
+	port = admin_config['cdm']['port']
 	cdm_url = "http://#{server}:#{port}/dmwebservices/index.php?q="
-	meta_map_config = config['meta_map']
+	meta_map_config = meta_config['meta_map']
 	meta_map_file = ""
 	unused_fields = []
 	meta_map_config.each do |field|

@@ -78,52 +78,6 @@ def get_item_info(cdm_url, collection_alias, item_pointer)
 end
 
 
-def transform_item(item_info, collection_map)
-	new_item = []
-	field_info = {}
-#	field = String.new
-#	type = String.new
-#	vocab = String.new
-	item_info.each do |nick, value|
-		if value.class == Hash # blank fields return an empty hash
-			next
-		else
-			field_info = collection_map.fetch(nick)
-			namespace = field_info['namespace']
-			map = field_info['map']
-			label = field_info['label']
-			type = field_info['type']
-			vocab = field_info['vocab']
-
-			# remove white space and trailing semicolon
-			value = value.strip.chomp(";")
-
-			# parse multi-value fields and exclude transcript
-#			if (value.include? ";") && ((map != "transcript")||(map != "inscription")||(map != "caption"))
-			if (value.include? ";") && (map != "transcript") && (type != ("inscription"||"caption"))
-
-				values = value.split("; ")
-				values.each do |v|
-					field = "<#{namespace}:#{map} label=\"#{label}\""
-					field += " type=\"#{type}\"" unless type.nil?
-					field += " vocab=\"#{vocab}\"" unless vocab.nil?
-					field += ">#{v}</#{namespace}:#{map}>"
-					new_item << field
-				end
-
-			else # single value fields
-				field = "<#{namespace}:#{map} label=\"#{label}\""
-				field += " type=\"#{type}\"" unless type.nil?
-				field += " vocab=\"#{vocab}\"" unless vocab.nil?
-				field += ">#{value}</#{namespace}:#{map}>"
-				new_item << field
-			end
-		end
-	end
-	new_item
-end
-
-
 def get_item_dc_fedora(item_info, collection_map)
 	item_dc = []
 	field_info = {}
@@ -147,11 +101,11 @@ def get_item_dc_fedora(item_info, collection_map)
 										&& (type != ("inscription"||"caption"))
 
 					values = value.split(";")
-					values.each {|v| item_dc << "<#{namespace}:#{map}>#{v.strip.gsub('&', '&amp;')}</#{namespace}:#{map}>" }
+					values.each {|v| item_dc << [namespace, map, v.strip] }
 
 				else # single value fields
 
-					item_dc << "<#{namespace}:#{map}>#{value.gsub('&', '&amp;')}</#{namespace}:#{map}>"
+					item_dc << [namespace, map, value]
 
 				end
 			end
@@ -161,43 +115,103 @@ def get_item_dc_fedora(item_info, collection_map)
 end
 
 
-def get_fedora_foxml(name, pid, dc_datastream, collection_alias, compound_object_pid = nil)
+def get_item_tech_fedora(item_info, collection_map)
+	item_tech = []
+	field_info = {}
+	item_info.each do |nick, value|
+		if value.class == Hash # blank fields return an empty hash
+			next
+		else
+			field_info = collection_map.fetch(nick)
+			namespace = field_info['namespace']
 
-	# FOXML header
-	foxml_file = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-	foxml_file << "<foxml:digitalObject xmlns:foxml=\"info:fedora/fedora-system:def/foxml#\" VERSION=\"1.1\" PID=\"#{pid}\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd\">\n"
-	foxml_file << "\t"   + "<foxml:objectProperties>\n"
-	foxml_file << "\t"*2 + "<foxml:property NAME=\"info:fedora/fedora-system:def/model#state\" VALUE=\"A\"/>\n"
-	foxml_file << "\t"*2 + "<foxml:property NAME=\"info:fedora/fedora-system:def/model#label\" VALUE=\"#{name}\"/>\n"
-	foxml_file << "\t"   + "</foxml:objectProperties>\n"
+			if (namespace == "uhlibadmin")
 
-	# DC datastream
-	foxml_file << "\t"   + "<foxml:datastream ID=\"DC\" STATE=\"A\" CONTROL_GROUP=\"X\">\n"
-	foxml_file << "\t"*2 + "<foxml:datastreamVersion FORMAT_URI=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" ID=\"DC.0\" MIMETYPE=\"text/xml\" LABEL=\"Dublin Core Record\">\n"
-	foxml_file << "\t"*3 + "<foxml:xmlContent>\n"
-	foxml_file << dc_datastream
-	foxml_file << "\t"*3 + "</foxml:xmlContent>\n"
-	foxml_file << "\t"*2 + "</foxml:datastreamVersion>\n"
-	foxml_file << "\t"   + "</foxml:datastream>\n"
+				map = field_info['map']
+				value = value.strip.chomp(";") # remove white space, trailing semicolon
+				item_tech << [namespace, map, value]
 
-	# RELS-EXT datastream
-	foxml_file << "\t"   + "<foxml:datastream ID=\"RELS-EXT\" CONTROL_GROUP=\"X\">\n"
-	foxml_file << "\t"*2 + "<foxml:datastreamVersion FORMAT_URI=\"info:fedora/fedora-system:FedoraRELSExt-1.0\" ID=\"RELS-EXT.0\" MIMETYPE=\"application/rdf+xml\" LABEL=\"RDF Statements about this object\">\n"
-	foxml_file << "\t"*3 + "<foxml:xmlContent>\n"
-	foxml_file << "\t"*4 + "<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" xmlns:rdfs=\"http://www.w3.org/2000/01/rdf-schema#\" xmlns:fedora=\"info:fedora/fedora-system:def/relations-external#\" xmlns:myns=\"http://www.nsdl.org/ontologies/relationships#\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\" xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\">\n"
-	foxml_file << "\t"*5 + "<rdf:Description rdf:about=\"info:fedora/#{pid}\">\n"
-	foxml_file << "\t"*6 + "<fedora:isMemberOfCollection rdf:resource=\"info:fedora/uhdamstf:#{collection_alias}\"/>\n"
-	if compound_object_pid
-		foxml_file << "\t"*6 + "<myns:isPartOf rdf:resource=\"info:fedora/#{compound_object_pid}\"/>\n"
+			end
+		end
 	end
-	foxml_file << "\t"*5 + "</rdf:Description>\n"
-	foxml_file << "\t"*4 + "</rdf:RDF>\n"
-	foxml_file << "\t"*3 + "</foxml:xmlContent>\n"
-	foxml_file << "\t"*2 + "</foxml:datastreamVersion>\n"
-	foxml_file << "\t"   + "</foxml:datastream>\n"
+	item_tech
+end
 
-	# EOF
-	foxml_file << "</foxml:digitalObject>"
+
+def get_foxml(pid, name, dcmeta, techmeta, collection_alias, compound_object_pid = nil, compound_object_name = nil)
+
+	foxml = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+
+		xml['foxml'].digitalObject( :VERSION => 1.1,
+									:PID => "#{pid}",
+									'xmlns:foxml' => 'info:fedora/fedora-system:def/foxml#',
+									'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+									'xsi:schemaLocation' => 'info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd') {
+			xml['foxml'].objectProperties {
+				xml['foxml'].property(:NAME => 'info:fedora/fedora-system:def/model#state', :VALUE => 'A')
+				xml['foxml'].property(:NAME => 'info:fedora/fedora-system:def/model#label', :VALUE => "#{name}")
+			}
+			# dublin core metadata datastream
+			xml['foxml'].datastream(:ID => 'DC',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => "DC.0",
+												:MIMETYPE => "text/xml",
+												:FORMAT_URI => "http://www.openarchives.org/OAI/2.0/oai_dc/",
+												:LABEL => "Dublin Core Record for this object") {
+					xml['foxml'].xmlContent {
+						xml['oai_dc'].dc('xmlns:oai_dc' => "http://www.openarchives.org/OAI/2.0/oai_dc/",
+										 'xmlns:dc' => "http://purl.org/dc/elements/1.1/",
+										 'xmlns:dcterms' => "http://purl.org/dc/terms/") {
+							dcmeta.each {|node| xml[node[0]].send(node[1], node[2]) } # <ns:map>value</ns:map>
+						}
+					}
+				}
+			}
+			# rdf metadata datastream
+			xml['foxml'].datastream(:ID => "RELS-EXT",
+									:CONTROL_GROUP => "X") {
+				xml['foxml'].datastreamVersion( :ID => "RELS-EXT.0",
+												:MIMETYPE => "application/rdf+xml",
+												:FORMAT_URI => "info:fedora/fedora-system:FedoraRELSExt-1.0",
+												:LABEL => "RDF Statements about this object") {
+					xml['foxml'].xmlContent {
+						xml['rdf'].RDF( 'xmlns:rdf' => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+										'xmlns:rdfs' => "http://www.w3.org/2000/01/rdf-schema#",
+										'xmlns:fedora' => "info:fedora/fedora-system:def/relations-external#",
+										'xmlns:myns' => "http://www.nsdl.org/ontologies/relationships#",
+										'xmlns:dc' => "http://purl.org/dc/elements/1.1/",
+										'xmlns:dcterms' => "http://purl.org/dc/terms/",
+										'xmlns:oai_dc' => "http://www.openarchives.org/OAI/2.0/oai_dc/") {
+							xml['rdf'].Description('rdf:about' => "info:fedora/#{pid}") {
+								xml['fedora'].isMemberOfCollection('rdf:resource' => "info:fedora/uhdamstf:#{collection_alias}")
+								xml['myns'].isPartOf('rdf:resource' => "info:fedora/#{compound_object_pid}") if compound_object_pid
+							}
+						}
+					}
+				}
+			}
+			# technical metadata datastream
+			xml['foxml'].datastream(:ID => "UHLIBTECH",
+									:STATE => "A",
+									:CONTROL_GROUP => "X") {
+				xml['foxml'].datastreamVersion( :ID => "UHLIBTECH.0",
+												:MIMETYPE => "text/xml",
+												:FORMAT_URI => "info:fedora/format:xml:uhlibadmin",
+												:LABEL => "UH Libraries Technical Metadata Record") {
+					xml['foxml'].xmlContent {
+						xml['uhlibadmin'].admin('xmlns:uhlibadmin' => "http://digital.lib.uh.edu/uhlibadmin:tech") {
+							xml['uhlibadmin'].technical {
+								techmeta.each {|node| xml[node[0]].send(node[1], node[2]) } # <ns:map>value</ns:map>
+							}
+						}
+					}
+				}
+			}
+		}
+	end
+	foxml
 end
 
 

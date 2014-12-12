@@ -19,19 +19,19 @@ collection_titles = collections_to_hash(collections_config)
 meta_map_config = fedora_config['meta_map']
 meta_map = meta_map_to_hash(meta_map_config)
 
-puts "\n------------------------------------------------"
-puts "Downloading UH Digital Library Metadata & Files:"
 total_collections = 0
 total_objects = 0
 total_files = 0
 
+puts "\n------------------------------------------------"
+puts "Downloading UH Digital Library Metadata & Files:"
+
 ### EITHER uncomment next two lines for all collections
 # collections = get_collections(cdm_url)
 # collection_aliases = get_collection_aliases(collections)
-
 ### OR use array of aliases
-collection_aliases = ["djscrew"]
 
+collection_aliases = ["p15195coll11"]
 ### test collections
 # p15195coll39 (theodor de bry)
 # p15195coll11 (scenes middle east)
@@ -54,12 +54,12 @@ collection_aliases.each do |collection_alias|
 	labels_and_nicks = get_labels_and_nicks(field_info)
 	collection_map = get_collection_map(labels_and_nicks, meta_map)
 
-	# create directory for download
+	# create directory for collection download
 	collection_title = collection_titles.fetch(collection_alias)
-	download_dir = "#{admin_config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
-	FileUtils::mkdir_p download_dir
+	collection_download_dir = "#{admin_config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
+	FileUtils::mkdir_p collection_download_dir
 	puts "\nDownloading Collection: "
-	puts download_dir.red + "\n\n"
+	puts collection_download_dir.red + "\n\n"
 
 	# get all objects in collection and loop through each one
 	object_count = 0
@@ -67,23 +67,21 @@ collection_aliases.each do |collection_alias|
 	objects['records'].each do |record|
 
 		object_count += 1
+		object_download_dir = File.join(collection_download_dir, "#{collection_alias}_#{record['pointer']}")
+		FileUtils::mkdir_p object_download_dir
 
 		# get the object metadata
 		object_pid = "#{collection_alias}:#{record['pointer']}"
 		object_info = get_item_info(cdm_url, collection_alias, record['pointer'])
-		object_dc = transform_item_fedora(object_info, collection_map)
-		object_name = object_info.fetch("title").gsub('&', '&amp;')
-
-		# format the dc datastream
-		dc_datastream = "\t"*4 + "<oai_dc:dc xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\">\n"
-		object_dc.each {|line| dc_datastream << "\t"*5 + "#{line}\n"}
-		dc_datastream << "\t"*4 + "</oai_dc:dc>\n"
+		object_name = object_info.fetch("title")
+		object_dc = get_item_dc_fedora(object_info, collection_map)
+		object_tech = get_item_tech_fedora(object_info, collection_map)
 
 		# get the foxml file
-		foxml_file = get_fedora_foxml(object_name, object_pid, dc_datastream, collection_alias)
+		foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias)
 
 		# write the foxml file
-		File.open(File.join(download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(foxml_file) }
+		File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(foxml.to_xml) }
 
 		if record['filetype'] == "cpd" # compound object
 
@@ -101,23 +99,19 @@ collection_aliases.each do |collection_alias|
 				# get the item metadata
 				item_pid = "#{collection_alias}:#{pointer}"
 				item_info = get_item_info(cdm_url, collection_alias, pointer)
-				item_dc = transform_item_fedora(item_info, collection_map)
 				item_name = item_info.fetch("title").gsub('&', '&amp;')
-
-				# format the dc datastream
-				dc_datastream = "\t"*4 + "<oai_dc:dc xmlns:oai_dc=\"http://www.openarchives.org/OAI/2.0/oai_dc/\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:dcterms=\"http://purl.org/dc/terms/\">\n"
-				item_dc.each {|line| dc_datastream << "\t"*5 + "#{line}\n"}
-				dc_datastream << "\t"*4 + "</oai_dc:dc>\n"
+				item_dc = get_item_dc_fedora(item_info, collection_map)
+				item_tech = get_item_tech_fedora(item_info, collection_map)
 
 				# get the foxml file
-				foxml_file = get_fedora_foxml(item_name, item_pid, dc_datastream, collection_alias, object_pid)
+				foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, object_pid, object_name)
 
 				# write the foxml file
-				File.open(File.join(download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(foxml_file) }
+				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(foxml.to_xml) }
 
 			end
 
-			puts "Compound Object Downloaded: " + "#{record['pointer']} (#{file_count} files)".green + "\n\n"
+			puts "Compound Object Downloaded: " + record['pointer'].to_s.green + " (#{file_count} files)" + "\n\n"
 			total_files += file_count
 
 		else

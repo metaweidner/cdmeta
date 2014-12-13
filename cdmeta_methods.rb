@@ -138,7 +138,7 @@ def get_item_tech_fedora(item_info, collection_map)
 end
 
 
-def get_foxml(pid, name, dcmeta, techmeta, collection_alias, compound_object_pid = nil, compound_object_name = nil)
+def get_foxml(pid, name, dcmeta, techmeta, collection_alias, collection_title, compound_object_pid = nil, compound_object_name = nil)
 
 	foxml = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
 
@@ -185,8 +185,8 @@ def get_foxml(pid, name, dcmeta, techmeta, collection_alias, compound_object_pid
 										'xmlns:dcterms' => "http://purl.org/dc/terms/",
 										'xmlns:oai_dc' => "http://www.openarchives.org/OAI/2.0/oai_dc/") {
 							xml['rdf'].Description('rdf:about' => "info:fedora/#{pid}") {
-								xml['fedora'].isMemberOfCollection('rdf:resource' => "info:fedora/uhdamstf:#{collection_alias}")
-								xml['myns'].isPartOf('rdf:resource' => "info:fedora/#{compound_object_pid}") if compound_object_pid
+								xml['fedora'].isMemberOfCollection('rdf:resource' => "info:fedora/uhdamstf:#{collection_alias}").text(collection_title)
+								xml['myns'].isPartOf('rdf:resource' => "info:fedora/#{compound_object_pid}").text(compound_object_name) if compound_object_pid
 							}
 						}
 					}

@@ -215,8 +215,8 @@ meta_map:
     type: ISO_639.2
     vocab:
   - label: Physical Description
-    namespace: dcterms
-    map: extent
+    namespace: dc
+    map: FORMAT
     type:
     vocab:
   - label: Type (DCMI)
@@ -226,7 +226,7 @@ meta_map:
     vocab: dcmi
   - label: Format (IMT)
     namespace: uhlibadmin
-    map: mimeType
+    map: FORMAT
     type:
     vocab: imt
   - label: Original Item Extent

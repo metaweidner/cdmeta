@@ -54,7 +54,7 @@ collection_aliases.each do |collection_alias|
 
 	collection_start = Time.now
 
-	# get the field information and map to dc
+	# get field information and map to dc
 	field_info = get_field_info(cdm_url, collection_alias)
 	labels_and_nicks = get_labels_and_nicks(field_info)
 	collection_map = get_collection_map(labels_and_nicks, meta_map)
@@ -67,7 +67,7 @@ collection_aliases.each do |collection_alias|
 	puts "\nDownloading Collection: "
 	puts collection_download_dir.red + "\n\n"
 
-	# get all objects in collection and loop through each one
+	# get objects in collection and loop through each
 	object_count = 0
 	objects = get_items(cdm_url, collection_alias)
 	objects['records'].each do |record|
@@ -119,6 +119,7 @@ collection_aliases.each do |collection_alias|
 			# write object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
+			# output object download confirmation to console
 			puts record['pointer'].to_s.green + " (#{file_count} files)".green + "\n\n"
 			total_files += file_count
 
@@ -126,6 +127,7 @@ collection_aliases.each do |collection_alias|
 			# write object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
+			# output object download confirmation to console
 			puts "Single Object: " + record['pointer'].to_s.green + "\n\n"
 			total_files += 1
 		end

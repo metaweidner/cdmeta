@@ -86,7 +86,7 @@ collection_aliases.each do |collection_alias|
 		object_tech = get_item_tech_fedora(object_info, collection_map)
 
 		# get object foxml file
-		object_foxml = get_item_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_long_title)
+		object_foxml = get_item_foxml(object_pid, object_name, object_dc, object_tech, collection_alias)
 
 		if record['filetype'] == "cpd" # compound object
 
@@ -109,7 +109,7 @@ collection_aliases.each do |collection_alias|
 				item_tech = get_item_tech_fedora(item_info, collection_map)
 
 				# get/write item foxml file
-				item_foxml = get_item_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_long_title, object_pid, object_name)
+				item_foxml = get_item_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, object_pid, object_name)
 				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(item_foxml.to_xml) }
 
 			end

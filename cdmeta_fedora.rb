@@ -31,7 +31,7 @@ puts "Downloading UH Digital Library Metadata & Files:"
 # collection_aliases = get_collection_aliases(collections)
 ### OR use array of aliases
 
-collection_aliases = ["p15195coll11"]
+collection_aliases = ["p15195coll11", "p15195coll39"]
 ### test collections
 # p15195coll39 (theodor de bry)
 # p15195coll11 (scenes middle east)
@@ -77,11 +77,8 @@ collection_aliases.each do |collection_alias|
 		object_dc = get_item_dc_fedora(object_info, collection_map)
 		object_tech = get_item_tech_fedora(object_info, collection_map)
 
-		# get the foxml file
-		foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias)
-
-		# write the foxml file
-		File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(foxml.to_xml) }
+		# get the object foxml
+		object_foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_title)
 
 		if record['filetype'] == "cpd" # compound object
 
@@ -103,11 +100,11 @@ collection_aliases.each do |collection_alias|
 				item_dc = get_item_dc_fedora(item_info, collection_map)
 				item_tech = get_item_tech_fedora(item_info, collection_map)
 
-				# get the foxml file
-				foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, object_pid, object_name)
+				# get the item foxml
+				item_foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_title, object_pid, object_name)
 
-				# write the foxml file
-				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(foxml.to_xml) }
+				# write the item foxml file
+				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(item_foxml.to_xml) }
 
 			end
 
@@ -115,6 +112,9 @@ collection_aliases.each do |collection_alias|
 			total_files += file_count
 
 		else
+			# write the object foxml file
+			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
+
 			puts "Single Object Downloaded: " + record['pointer'].to_s.green + "\n\n"
 			total_files += 1
 		end

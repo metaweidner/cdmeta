@@ -31,9 +31,10 @@ puts "Downloading UH Digital Library Metadata:"
 ### EITHER uncomment next two lines for all collections
 # collections = get_collections(cdm_url)
 # collection_aliases = get_collection_aliases(collections)
-### OR use array of aliases
 
+### OR use array of aliases
 collection_aliases = ["p15195coll11", "p15195coll39"]
+
 ### test collections
 # p15195coll39 (theodor de bry)
 # p15195coll11 (scenes middle east)
@@ -83,7 +84,7 @@ collection_aliases.each do |collection_alias|
 		object_tech = get_item_tech_fedora(object_info, collection_map)
 
 		# get the object foxml
-		object_foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_long_title)
+		object_foxml = get_item_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_long_title)
 
 		if record['filetype'] == "cpd" # compound object
 
@@ -101,12 +102,12 @@ collection_aliases.each do |collection_alias|
 				# get the item metadata
 				item_pid = "#{collection_alias}:#{pointer}"
 				item_info = get_item_info(cdm_url, collection_alias, pointer)
-				item_name = item_info.fetch("title").gsub('&', '&amp;')
+				item_name = item_info.fetch("title")
 				item_dc = get_item_dc_fedora(item_info, collection_map)
 				item_tech = get_item_tech_fedora(item_info, collection_map)
 
 				# get the item foxml
-				item_foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_long_title, object_pid, object_name)
+				item_foxml = get_item_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_long_title, object_pid, object_name)
 
 				# write the item foxml file
 				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(item_foxml.to_xml) }
@@ -128,6 +129,13 @@ collection_aliases.each do |collection_alias|
 		end
 	end
 
+	# get collection foxml
+	collection_foxml = get_collection_foxml(collection_alias, collection_long_title)
+
+	# write collection foxml file
+	File.open(File.join(collection_download_dir, "#{collection_alias}.xml"), 'w') {|f| f.write(collection_foxml.to_xml) }
+
+	# output collection info to console
 	collection_finish = Time.now
 	collection_time = Time.at(collection_finish - collection_start).utc.strftime("%M:%S")
 	puts "Collection Download Complete:"
@@ -138,6 +146,7 @@ collection_aliases.each do |collection_alias|
 
 end
 
+# output download info to console
 download_finish = Time.now
 download_time = Time.at(download_finish - download_start).utc.strftime("%M:%S")
 puts "\nUHDL Download Complete".green

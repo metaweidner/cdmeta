@@ -152,7 +152,7 @@ def get_item_tech_fedora(item_info, collection_map)
 end
 
 
-def get_foxml(pid, name, dcmeta, techmeta, collection_alias, collection_long_title, compound_object_pid = nil, compound_object_name = nil)
+def get_item_foxml(pid, name, dcmeta, techmeta, collection_alias, collection_long_title, compound_object_pid = nil, compound_object_name = nil)
 
 	foxml = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
 
@@ -170,34 +170,36 @@ def get_foxml(pid, name, dcmeta, techmeta, collection_alias, collection_long_tit
 									:STATE => 'A',
 									:CONTROL_GROUP => 'X',
 									:VERSIONABLE => 'true') {
-				xml['foxml'].datastreamVersion( :ID => "DC.0",
-												:MIMETYPE => "text/xml",
-												:FORMAT_URI => "http://www.openarchives.org/OAI/2.0/oai_dc/",
-												:LABEL => "Dublin Core Record for this object") {
+				xml['foxml'].datastreamVersion( :ID => 'DC1.0',
+												:MIMETYPE => 'text/xml',
+												:FORMAT_URI => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+												:LABEL => 'Dublin Core Record for this object') {
 					xml['foxml'].xmlContent {
-						xml['oai_dc'].dc('xmlns:oai_dc' => "http://www.openarchives.org/OAI/2.0/oai_dc/",
-										 'xmlns:dc' => "http://purl.org/dc/elements/1.1/",
-										 'xmlns:dcterms' => "http://purl.org/dc/terms/") {
+						xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+										 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+										 'xmlns:dcterms' => 'http://purl.org/dc/terms/') {
 							dcmeta.each {|node| xml[node[0]].send(node[1], node[2]) } # <ns:map>value</ns:map>
 						}
 					}
 				}
 			}
 			# rdf metadata datastream
-			xml['foxml'].datastream(:ID => "RELS-EXT",
-									:CONTROL_GROUP => "X") {
-				xml['foxml'].datastreamVersion( :ID => "RELS-EXT.0",
-												:MIMETYPE => "application/rdf+xml",
-												:FORMAT_URI => "info:fedora/fedora-system:FedoraRELSExt-1.0",
-												:LABEL => "RDF Statements about this object") {
+			xml['foxml'].datastream(:ID => 'RELS-EXT',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => 'RELS-EXT1.0',
+												:MIMETYPE => 'application/rdf+xml',
+												:FORMAT_URI => 'info:fedora/fedora-system:FedoraRELSExt-1.0',
+												:LABEL => 'RDF Statements about this object') {
 					xml['foxml'].xmlContent {
-						xml['rdf'].RDF( 'xmlns:rdf' => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-										'xmlns:rdfs' => "http://www.w3.org/2000/01/rdf-schema#",
-										'xmlns:fedora' => "info:fedora/fedora-system:def/relations-external#",
-										'xmlns:myns' => "http://www.nsdl.org/ontologies/relationships#",
-										'xmlns:dc' => "http://purl.org/dc/elements/1.1/",
-										'xmlns:dcterms' => "http://purl.org/dc/terms/",
-										'xmlns:oai_dc' => "http://www.openarchives.org/OAI/2.0/oai_dc/") {
+						xml['rdf'].RDF( 'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+										'xmlns:rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
+										'xmlns:fedora' => 'info:fedora/fedora-system:def/relations-external#',
+										'xmlns:myns' => 'http://www.nsdl.org/ontologies/relationships#',
+										'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+										'xmlns:dcterms' => 'http://purl.org/dc/terms/',
+										'xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/') {
 							xml['rdf'].Description('rdf:about' => "info:fedora/#{pid}") {
 								xml['fedora'].isMemberOfCollection('rdf:resource' => "info:fedora/uhdamstf:#{collection_alias}").text(collection_long_title)
 								xml['myns'].isPartOf('rdf:resource' => "info:fedora/#{compound_object_pid}").text(compound_object_name) if compound_object_pid
@@ -207,18 +209,100 @@ def get_foxml(pid, name, dcmeta, techmeta, collection_alias, collection_long_tit
 				}
 			}
 			# technical metadata datastream
-			xml['foxml'].datastream(:ID => "UHLIBTECH",
-									:STATE => "A",
-									:CONTROL_GROUP => "X") {
-				xml['foxml'].datastreamVersion( :ID => "UHLIBTECH.0",
-												:MIMETYPE => "text/xml",
-												:FORMAT_URI => "info:fedora/format:xml:uhlibadmin",
-												:LABEL => "UH Libraries Technical Metadata Record") {
+			xml['foxml'].datastream(:ID => 'UHLIBTECH',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => 'UHLIBTECH1.0',
+												:MIMETYPE => 'text/xml',
+												:FORMAT_URI => 'info:fedora/format:xml:uhlibadmin',
+												:LABEL => 'UH Libraries Technical Metadata Record') {
 					xml['foxml'].xmlContent {
-						xml['uhlibadmin'].admin('xmlns:uhlibadmin' => "http://digital.lib.uh.edu/uhlibadmin:tech") {
+						xml['uhlibadmin'].admin('xmlns:uhlibadmin' => 'http://digital.lib.uh.edu/uhlibadmin:tech') {
 							xml['uhlibadmin'].technical {
 								techmeta.each {|node| xml[node[0]].send(node[1], node[2]) } # <ns:map>value</ns:map>
 							}
+						}
+					}
+				}
+			}
+		}
+	end
+	foxml
+end
+
+
+def get_collection_foxml(collection_alias, collection_long_title)
+
+	foxml = Nokogiri::XML::Builder.new(:encoding => 'UTF-8') do |xml|
+
+		xml['foxml'].digitalObject( :VERSION => 1.1,
+									:PID => "uhdamstf:#{collection_alias}",
+									'xmlns:foxml' => 'info:fedora/fedora-system:def/foxml#',
+									'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+									'xsi:schemaLocation' => 'info:fedora/fedora-system:def/foxml# http://www.fedora.info/definitions/1/0/foxml1-1.xsd') {
+			xml['foxml'].objectProperties {
+				xml['foxml'].property(:NAME => 'info:fedora/fedora-system:def/model#state', :VALUE => 'A')
+				xml['foxml'].property(:NAME => 'info:fedora/fedora-system:def/model#label', :VALUE => "Service Definition Object (Collection) for #{collection_long_title}")
+			}
+			# dublin core metadata datastream
+			xml['foxml'].datastream(:ID => 'DC',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => 'DC1.0',
+												:MIMETYPE => 'text/xml',
+												:FORMAT_URI => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+												:LABEL => 'Dublin Core Record for this object') {
+					xml['foxml'].xmlContent {
+						xml['oai_dc'].dc('xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/',
+										 'xmlns:dc' => 'http://purl.org/dc/elements/1.1/') {
+							xml['dc'].title "Service Definition Object for #{collection_long_title}"
+							xml['dc'].identifier "uhdamstf:#{collection_alias}"
+						}
+					}
+				}
+			}
+			# rdf metadata datastream
+			xml['foxml'].datastream(:ID => 'RELS-EXT',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => 'RELS-EXT1.0',
+												:MIMETYPE => 'application/rdf+xml',
+												:FORMAT_URI => 'info:fedora/fedora-system:FedoraRELSExt-1.0',
+												:LABEL => 'RDF Statements about this object') {
+					xml['foxml'].xmlContent {
+						xml['rdf'].RDF( 'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+										'xmlns:rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
+										'xmlns:fedora' => 'info:fedora/fedora-system:def/relations-external#',
+										'xmlns:myns' => 'http://www.nsdl.org/ontologies/relationships#',
+										'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+										'xmlns:dcterms' => 'http://purl.org/dc/terms/',
+										'xmlns:oai_dc' => 'http://www.openarchives.org/OAI/2.0/oai_dc/') {
+							xml['rdf'].Description('rdf:about' => "info:fedora/uhdamstf:#{collection_alias}") {
+								xml['fedora'].hasModel('rdf:resource' => 'info:fedora/fedora-system:ServiceDefinition-3.0')
+							}
+						}
+					}
+				}
+			}
+			# method map datastream
+			xml['foxml'].datastream(:ID => 'METHODMAP',
+									:STATE => 'A',
+									:CONTROL_GROUP => 'X',
+									:VERSIONABLE => 'true') {
+				xml['foxml'].datastreamVersion( :ID => 'METHODMAP1.0',
+												:MIMETYPE => 'text/xml',
+												:FORMAT_URI => 'info:fedora/fedora-system:FedoraSDefMethodMap-1.0',
+												:LABEL => 'Abstract Method Map') {
+					xml['foxml'].xmlContent {
+						xml['fmm'].MethodMap('name' => 'MethodMap - Collection of Objects',
+											'xmlns:fmm' => 'http://fedora.comm.nsdlib.org/service/methodmap') {
+							xml['fmm'].Method(  'operationLabel' => 'An xml list of members in the collection',
+												'operationName' => 'list')
+							xml['fmm'].Method(  'operationLabel' => 'An html representation of the collection',
+												'operationName' => 'view')
 						}
 					}
 				}

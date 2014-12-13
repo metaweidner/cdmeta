@@ -111,8 +111,8 @@ def get_item_dc_fedora(item_info, collection_map)
 
 				# parse multi-value fields; exclude: title, transcript, description, inscription, caption
 				if (value.include? ";") && (map != ("title"||"transcript")) \
-										&& (label != "Description") \
-										&& (type != ("inscription"||"caption"))
+					&& (label != "Description") \
+					&& (type != ("inscription"||"caption"))
 
 					values = value.split(";")
 					values.each {|v| item_dc << [namespace, map, v.strip] }
@@ -273,8 +273,8 @@ def transform_item_dspace(item_info, collection_map)
 
 				# parse multi-value fields and exclude transcript, description, extent
 				if (value.include? ";") && (element != "transcript") \
-										&& (element != "description") \
-										&& (qualifier != "extent")
+					&& (element != "description") \
+					&& (qualifier != "extent")
 
 					value.split(";").each do |v|
 						# field = "<dcvalue element=\"#{element}\" qualifier=\"#{qualifier}\" label=\"#{label}\">"

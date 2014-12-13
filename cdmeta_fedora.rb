@@ -23,9 +23,10 @@ meta_map = meta_map_to_hash(meta_map_config)
 total_collections = 0
 total_objects = 0
 total_files = 0
+download_start = Time.now
 
-puts "\n------------------------------------------------"
-puts "Downloading UH Digital Library Metadata & Files:"
+puts "\n----------------------------------------"
+puts "Downloading UH Digital Library Metadata:"
 
 ### EITHER uncomment next two lines for all collections
 # collections = get_collections(cdm_url)
@@ -45,10 +46,12 @@ collection_aliases.each do |collection_alias|
 	collection_long_title = collection_long_titles.fetch(collection_alias)
 	puts "  - #{collection_long_title} (#{collection_alias})".red
 end
-puts "------------------------------------------------\n"
+puts "----------------------------------------\n"
 
 # loop through collections
 collection_aliases.each do |collection_alias|
+
+	collection_start = Time.now
 
 	# get the field information and map to dc
 	field_info = get_field_info(cdm_url, collection_alias)
@@ -84,7 +87,7 @@ collection_aliases.each do |collection_alias|
 
 		if record['filetype'] == "cpd" # compound object
 
-			puts "Downloading Compound Object: #{record['pointer']}"
+			puts "Compound Object: #{record['pointer']}"
 
 			# get the items in the object and loop through each one
 			file_count = 0
@@ -93,7 +96,7 @@ collection_aliases.each do |collection_alias|
 			compound_object_items.each do |pointer|
 
 				file_count += 1
-				puts "... getting item #{pointer}"
+				puts "... getting #{pointer}"
 
 				# get the item metadata
 				item_pid = "#{collection_alias}:#{pointer}"
@@ -113,27 +116,32 @@ collection_aliases.each do |collection_alias|
 			# write the object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
-			puts "Compound Object Downloaded: " + record['pointer'].to_s.green + " (#{file_count} files)" + "\n\n"
+			puts record['pointer'].to_s.green + " (#{file_count} files)".green + "\n\n"
 			total_files += file_count
 
 		else
 			# write the object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
-			puts "Single Object Downloaded: " + record['pointer'].to_s.green + "\n\n"
+			puts "Single Object: " + record['pointer'].to_s.green + "\n\n"
 			total_files += 1
 		end
 	end
 
-	puts "-----------------------------"
-	puts "Collection Download Complete: " + "#{collection_title} (#{object_count})".green
-	puts "-----------------------------\n"
+	collection_finish = Time.now
+	collection_time = Time.at(collection_finish - collection_start).utc.strftime("%M:%S")
+	puts "Collection Download Complete:"
+	puts collection_long_title.to_s.green
+	puts "#{object_count} " + (object_count > 1 ? "objects" : "object") + " in #{collection_time}\n"
 	total_collections += 1
 	total_objects += object_count
 
 end
 
+download_finish = Time.now
+download_time = Time.at(download_finish - download_start).utc.strftime("%M:%S")
 puts "\nUHDL Download Complete".green
 puts "Total Collections: #{total_collections}"
 puts "Total Objects: #{total_objects}"
-puts "Total Files: #{total_files}\n\n"
+puts "Total Files: #{total_files}"
+puts "Total Time: #{download_time}\n\n"

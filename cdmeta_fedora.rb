@@ -60,7 +60,7 @@ collection_aliases.each do |collection_alias|
 	collection_map = get_collection_map(labels_and_nicks, meta_map)
 	collection_long_title = collection_long_titles.fetch(collection_alias)
 
-	# create directory for collection download
+	# create collection download directory
 	collection_title = collection_titles.fetch(collection_alias)
 	collection_download_dir = "#{admin_config['cdm']['download_dir']}/#{collection_title}_(#{collection_alias})"
 	FileUtils::mkdir_p collection_download_dir
@@ -73,24 +73,26 @@ collection_aliases.each do |collection_alias|
 	objects['records'].each do |record|
 
 		object_count += 1
+
+		# create object download directory
 		object_download_dir = File.join(collection_download_dir, "#{collection_alias}_#{record['pointer']}")
 		FileUtils::mkdir_p object_download_dir
 
-		# get the object metadata
+		# get object metadata
 		object_pid = "#{collection_alias}:#{record['pointer']}"
 		object_info = get_item_info(cdm_url, collection_alias, record['pointer'])
 		object_name = object_info.fetch("title")
 		object_dc = get_item_dc_fedora(object_info, collection_map)
 		object_tech = get_item_tech_fedora(object_info, collection_map)
 
-		# get the object foxml
+		# get object foxml
 		object_foxml = get_item_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_long_title)
 
 		if record['filetype'] == "cpd" # compound object
 
 			puts "Compound Object: #{record['pointer']}"
 
-			# get the items in the object and loop through each one
+			# get items in object and loop through each
 			file_count = 0
 			compound_object_info = get_compound_object_info(cdm_url, collection_alias, record['pointer'])
 			compound_object_items = get_compound_object_items(compound_object_info)
@@ -99,29 +101,29 @@ collection_aliases.each do |collection_alias|
 				file_count += 1
 				puts "... getting #{pointer}"
 
-				# get the item metadata
+				# get item metadata
 				item_pid = "#{collection_alias}:#{pointer}"
 				item_info = get_item_info(cdm_url, collection_alias, pointer)
 				item_name = item_info.fetch("title")
 				item_dc = get_item_dc_fedora(item_info, collection_map)
 				item_tech = get_item_tech_fedora(item_info, collection_map)
 
-				# get the item foxml
+				# get item foxml
 				item_foxml = get_item_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_long_title, object_pid, object_name)
 
-				# write the item foxml file
+				# write item foxml file
 				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(item_foxml.to_xml) }
 
 			end
 
-			# write the object foxml file
+			# write object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
 			puts record['pointer'].to_s.green + " (#{file_count} files)".green + "\n\n"
 			total_files += file_count
 
 		else
-			# write the object foxml file
+			# write object foxml file
 			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
 			puts "Single Object: " + record['pointer'].to_s.green + "\n\n"

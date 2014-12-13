@@ -14,7 +14,8 @@ port = admin_config['cdm']['port']
 cdm_url = "http://#{server}:#{port}/dmwebservices/index.php?q="
 
 collections_config = admin_config['collections']
-collection_titles = collections_to_hash(collections_config)
+collection_titles = collection_titles_to_hash(collections_config)
+collection_long_titles = collection_long_titles_to_hash(collections_config)
 
 meta_map_config = fedora_config['meta_map']
 meta_map = meta_map_to_hash(meta_map_config)
@@ -41,8 +42,8 @@ collection_aliases = ["p15195coll11", "p15195coll39"]
 
 # output collection names to the console
 collection_aliases.each do |collection_alias|
-	collection_title = collection_titles.fetch(collection_alias)
-	puts "  - #{collection_title} (#{collection_alias})".red
+	collection_long_title = collection_long_titles.fetch(collection_alias)
+	puts "  - #{collection_long_title} (#{collection_alias})".red
 end
 puts "------------------------------------------------\n"
 
@@ -53,6 +54,7 @@ collection_aliases.each do |collection_alias|
 	field_info = get_field_info(cdm_url, collection_alias)
 	labels_and_nicks = get_labels_and_nicks(field_info)
 	collection_map = get_collection_map(labels_and_nicks, meta_map)
+	collection_long_title = collection_long_titles.fetch(collection_alias)
 
 	# create directory for collection download
 	collection_title = collection_titles.fetch(collection_alias)
@@ -78,7 +80,7 @@ collection_aliases.each do |collection_alias|
 		object_tech = get_item_tech_fedora(object_info, collection_map)
 
 		# get the object foxml
-		object_foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_title)
+		object_foxml = get_foxml(object_pid, object_name, object_dc, object_tech, collection_alias, collection_long_title)
 
 		if record['filetype'] == "cpd" # compound object
 
@@ -101,12 +103,15 @@ collection_aliases.each do |collection_alias|
 				item_tech = get_item_tech_fedora(item_info, collection_map)
 
 				# get the item foxml
-				item_foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_title, object_pid, object_name)
+				item_foxml = get_foxml(item_pid, item_name, item_dc, item_tech, collection_alias, collection_long_title, object_pid, object_name)
 
 				# write the item foxml file
 				File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}_#{pointer}.xml"), 'w') {|f| f.write(item_foxml.to_xml) }
 
 			end
+
+			# write the object foxml file
+			File.open(File.join(object_download_dir, "#{collection_alias}_#{record['pointer']}.xml"), 'w') {|f| f.write(object_foxml.to_xml.gsub(':FORMAT>', ':format>')) }
 
 			puts "Compound Object Downloaded: " + record['pointer'].to_s.green + " (#{file_count} files)" + "\n\n"
 			total_files += file_count

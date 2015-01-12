@@ -6,53 +6,53 @@ meta_map:
     vocab:
   - label: Alternative Title
     namespace: dc
-    map: alternative
+    map: subTitle
     type:
     vocab: 
   - label: Creator (LCNAF)
     namespace: dc
-    map: creator
-    type:
+    map: name
+    type: Creator
     vocab: lcnaf
   - label: Creator (HOT)
     namespace: dc
-    map: creator
-    type:
+    map: name
+    type: Creator
     vocab: hot
   - label: Creator (ULAN)
     namespace: dc
-    map: creator
-    type:
+    map: name
+    type: Creator
     vocab: ulan
   - label: Creator (Local)
     namespace: dc
-    map: creator
-    type:
+    map: name
+    type: Creator
     vocab: uhl
   - label: Contributor (LCNAF)
     namespace: dc
-    map: contributor
-    type:
+    map: name
+    type: Contributor
     vocab: lcnaf
   - label: Contributor (HOT)
     namespace: dc
-    map: contributor
-    type:
+    map: name
+    type: Contributor
     vocab: hot
   - label: Contributor (ULAN)
     namespace: dc
-    map: contributor
-    type:
+    map: name
+    type: Contributor
     vocab: ulan
   - label: Contributor (Local)
     namespace: dc
-    map: contributor
-    type:
+    map: name
+    type: Contributor
     vocab: uhl
   - label: Contributors (Local)
     namespace: dc
-    map: contributor
-    type:
+    map: name
+    type: Contributor
     vocab: uhl
   - label: Publisher
     namespace: dc

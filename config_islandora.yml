@@ -1,0 +1,434 @@
+meta_map:
+  - label: Title
+    namespace: dc
+    map: title
+    type:
+    vocab:
+  - label: Alternative Title
+    namespace: dc
+    map: alternative
+    type:
+    vocab: 
+  - label: Creator (LCNAF)
+    namespace: dc
+    map: creator
+    type:
+    vocab: lcnaf
+  - label: Creator (HOT)
+    namespace: dc
+    map: creator
+    type:
+    vocab: hot
+  - label: Creator (ULAN)
+    namespace: dc
+    map: creator
+    type:
+    vocab: ulan
+  - label: Creator (Local)
+    namespace: dc
+    map: creator
+    type:
+    vocab: uhl
+  - label: Contributor (LCNAF)
+    namespace: dc
+    map: contributor
+    type:
+    vocab: lcnaf
+  - label: Contributor (HOT)
+    namespace: dc
+    map: contributor
+    type:
+    vocab: hot
+  - label: Contributor (ULAN)
+    namespace: dc
+    map: contributor
+    type:
+    vocab: ulan
+  - label: Contributor (Local)
+    namespace: dc
+    map: contributor
+    type:
+    vocab: uhl
+  - label: Contributors (Local)
+    namespace: dc
+    map: contributor
+    type:
+    vocab: uhl
+  - label: Publisher
+    namespace: dc
+    map: publisher
+    type:
+    vocab:
+  - label: Place of Creation (TGN)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: tgn
+  - label: Place of Creation (HOT)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: hot
+  - label: Place of Creation (Local)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: uhl
+  - label: Date (ISO 8601)
+    namespace: dc
+    map: date
+    type: ISO_8601
+    vocab:
+  - label: Date
+    namespace: dc
+    map: date
+    type: natural_language
+    vocab:
+  - label: Description
+    namespace: dc
+    map: description
+    type:
+    vocab:
+  - label: Caption
+    namespace: dc
+    map: description
+    type: caption
+    vocab:
+  - label: Inscription
+    namespace: dc
+    map: description
+    type: inscription
+    vocab:
+  - label: Donor
+    namespace: dcterms
+    map: provenance
+    type:
+    vocab:
+  - label: Subject.Topical (LCSH)
+    namespace: dc
+    map: subject
+    type: topic
+    vocab: lcsh
+  - label: Subject.Topical (TGM-1)
+    namespace: dc
+    map: subject
+    type: topic
+    vocab: tgm
+  - label: Subject.Topical (AAT)
+    namespace: dc
+    map: subject
+    type: topic
+    vocab: aat
+  - label: Subject.Topical (SAA)
+    namespace: dc
+    map: subject
+    type: topic
+    vocab: saa
+  - label: Subject.Topical (Local)
+    namespace: dc
+    map: subject
+    type: topic
+    vocab: uhl
+  - label: Subject.Name (LCNAF)
+    namespace: dc
+    map: subject
+    type: name
+    vocab: lcnaf
+  - label: Subject.Name (HOT)
+    namespace: dc
+    map: subject
+    type: name
+    vocab: hot
+  - label: Subject.Name (ULAN)
+    namespace: dc
+    map: subject
+    type: name
+    vocab: ulan
+  - label: Subject.Name (Local)
+    namespace: dc
+    map: subject
+    type: name
+    vocab: uhl
+  - label: Subject.Time Period (LCSH)
+    namespace: dc
+    map: coverage
+    type: temporal
+    vocab: lcsh
+  - label: Subject.Time Period (HOT)
+    namespace: dc
+    map: coverage
+    type: temporal
+    vocab: hot
+  - label: Subject.Time Period (Local)
+    namespace: dc
+    map: coverage
+    type: temporal
+    vocab: uhl
+  - label: Subject.Geographic (TGN)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: tgn
+  - label: Subject. Geographic (TGN)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: tgn
+  - label: Subject.Geographic (HOT)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: hot
+  - label: Subject.Geographic (Local)
+    namespace: dc
+    map: coverage
+    type: spatial
+    vocab: uhl
+  - label: Geographic Coordinates
+    namespace: uhl
+    map: geographicCoordinates
+    type: 
+    vocab:
+  - label: Genre (AAT)
+    namespace: dcterms
+    map: medium
+    type:
+    vocab: aat
+  - label: Genre (PBCore)
+    namespace: dcterms
+    map: medium
+    type:
+    vocab: pbcore
+  - label: Genre (Local)
+    namespace: dcterms
+    map: medium
+    type:
+    vocab: uhl
+  - label: Language
+    namespace: dc
+    map: language
+    type: natural_language
+    vocab:
+  - label: Language Code (ISO 639.2)
+    namespace: dc
+    map: language
+    type: ISO_639.2
+    vocab:
+  - label: Physical Description
+    namespace: dc
+    map: format
+    type:
+    vocab:
+  - label: Type (DCMI)
+    namespace: dc
+    map: type
+    type:
+    vocab: dcmi
+  - label: Format (IMT)
+    namespace: dc
+    map: format
+    type:
+    vocab: imt
+  - label: Original Item Extent
+    namespace: dcterms
+    map: extent
+    type:
+    vocab:
+  - label: Original Item Location
+    namespace: dc
+    map: source
+    type: location
+    vocab:
+  - label: Original Item URL
+    namespace: dc
+    map: source
+    type: url
+    vocab:
+  - label: Original Collection
+    namespace: dcterms
+    map: isPartOf
+    type: physical_collection_name
+    vocab:
+  - label: Original Collection URL
+    namespace: dcterms
+    map: isPartOf
+    type: physical_collection_url
+    vocab:
+  - label: Digital Collection
+    namespace: dcterms
+    map: isPartOf
+    type: digital_collection_name
+    vocab:
+  - label: Digital Collection URL
+    namespace: dcterms
+    map: isPartOf
+    type: digital_collection_url
+    vocab:
+  - label: Repository
+    namespace: dcterms
+    map: isPartOf
+    type: repository_name
+    vocab:
+  - label: Repository URL
+    namespace: dcterms
+    map: isPartOf
+    type: repository_url
+    vocab:
+  - label: Use and Reproduction
+    namespace: dc
+    map: rights
+    type:
+    vocab:
+  - label: File name
+    namespace: uhl
+    map: fileName
+    type:
+    vocab:
+  - label: Identifier
+    namespace: dc
+    map: identifier
+    type:
+    vocab:
+  - label: Access File Run Time
+    namespace: uhl
+    map: accessFileRunTime
+    type:
+    vocab:
+  - label: Access File Compression Rate
+    namespace: uhl
+    map: accessFileCompressionRate
+    type:
+    vocab:
+  - label: Access File Resolution
+    namespace: uhl
+    map: accessFileResolution
+    type:
+    vocab:
+  - label: Access File Checksum
+    namespace: uhl
+    map: accessFileChecksum
+    type:
+    vocab:
+  - label: Access File Notes
+    namespace: uhl
+    map: accessFileNotes
+    type:
+    vocab:
+  - label: Capture Tool
+    namespace: uhl
+    map: captureTool
+    type:
+    vocab:
+  - label: Digital Creator
+    namespace: uhl
+    map: digitalCreator
+    type:
+    vocab:
+  - label: Preservation File Name
+    namespace: uhl
+    map: preservationFileName
+    type:
+    vocab:
+  - label: Preservation File name
+    namespace: uhl
+    map: preservationFileName
+    type:
+    vocab:
+  - label: Preservation File Date Digital (ISO 8601)
+    namespace: uhl
+    map: preservationFileDateDigital
+    type:
+    vocab:
+  - label: Preservation File Bit Depth
+    namespace: uhl
+    map: preservationFileBitDepth
+    type:
+    vocab:
+  - label: Preservation File Bit Rate
+    namespace: uhl
+    map: preservationFileBitRate
+    type:
+    vocab:
+  - label: Preservation File Resolution
+    namespace: uhl
+    map: preservationFileResolution
+    type:
+    vocab:
+  - label: Preservation File Extent
+    namespace: uhl
+    map: preservationFileExtent
+    type:
+    vocab:
+  - label: Preservation File Checksum (MD5)
+    namespace: uhl
+    map: preservationFileChecksum
+    type: MD5
+    vocab:
+  - label: Preservation File Checksum (SHA-1)
+    namespace: uhl
+    map: preservationFileChecksum
+    type: SHA-1
+    vocab:
+  - label: Preservation File Notes
+    namespace: uhl
+    map: preservationFileNotes
+    type:
+    vocab:
+  - label: Transcript
+    namespace: uhl
+    map: transcript
+    type:
+    vocab:
+  - label: Page Sequence Number
+    namespace: uhl
+    map: pageSequenceNumber
+    type:
+    vocab:
+  - label: Conference
+    namespace: uhl
+    map: conference
+    type:
+    vocab:
+  - label: Archival file
+    namespace: uhl
+    map: archivalFile
+    type:
+    vocab:
+  - label: OCLC number
+    namespace: dc
+    map: identifier
+    type: oclc
+    vocab:
+  - label: Date created
+    namespace: cdm
+    map: dateCreated
+    type:
+    vocab:
+  - label: Date modified
+    namespace: cdm
+    map: dateModified
+    type:
+    vocab:
+  - label: CONTENTdm number
+    namespace: cdm
+    map: number
+    type:
+    vocab:
+  - label: CONTENTdm file name
+    namespace: cdm
+    map: fileName
+    type:
+    vocab:
+  - label: Attribution
+    namespace: uhl
+    map: attribution
+    type:
+    vocab:
+
+dc_map_template:
+  - label: 
+    namespace:
+    map: 
+    type:
+    vocab:
+
